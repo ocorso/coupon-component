@@ -5,6 +5,7 @@ var response;
 var myCoupon;
 var retailerSelectBox = {};
 
+var offerIndex = 0;
     function onload(){ 
       console.log('onload');
       myCoupon = document.getElementById('coupon');
@@ -22,10 +23,10 @@ var retailerSelectBox = {};
       sel.innerHTML = '';
 
       //oc: we're using the 1st offer for testing.
-      myCoupon.currentOfferId = myCoupon.offers[0]['offerId'];
+      myCoupon.currentOfferId = myCoupon.offers[offerIndex]['offerId'];
       
       //oc: populate select box with current offer's retailers
-      var merchantIds = myCoupon.offers[0]['merchantIds']['ns1:int'];
+      var merchantIds = myCoupon.offers[offerIndex]['merchantIds']['ns1:int'];
       for (var i = 0; i < merchantIds.length; i++) {
         var name = myCoupon.retailers[merchantIds[i]]['name'];
         var value = merchantIds[i];
@@ -38,7 +39,7 @@ var retailerSelectBox = {};
     }//end function
 
     function onSubmitClick(event){
-        var offerId = myCoupon.offers[0]['offerId'];
+        var offerId = myCoupon.offers[offerIndex]['offerId'];
         var loyalty = document.getElementById('loyalty').value;
         merchantId = document.getElementById('retailers_select').value;
         var loyaltyDataObj = {};
@@ -47,7 +48,4 @@ var retailerSelectBox = {};
       
         myCoupon.addLoyaltyInfo(loyaltyDataObj, merchantId);
     }//end function
-    function onGetActiveClick(event){
-        var merchantId = 69; //oc: document.getElementById('retailers_select').value;
-        myCoupon.getActiveCoupons(merchantId);
-    }//end function onGetActiveClick
+   
