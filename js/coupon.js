@@ -4,6 +4,9 @@
 * and
 * @MattAntWest's article:
 * http://blog.teamtreehouse.com/create-custom-html-elements-2
+* 
+* Custom Events: 
+* https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events
 */
 var proto = Object.create(HTMLElement.prototype);
 
@@ -82,7 +85,7 @@ proto._onFetchData = function(soapResponse){
 
   this.retailers = [];
 
-  //oc: store retailers by for retrieval by Id
+  //oc: store retailers by for retrieval by Id @ Big O(1)
   for (var i = 0; i < data['retailers']['QRetailer'].length; i++) {
     var key = data['retailers']['QRetailer'][i]['merchantId'];
     var value = data['retailers']['QRetailer'][i];
@@ -154,13 +157,18 @@ proto._onAddLoyaltyInfo = function(data){
   var addLoyaltyResult = response['#document']['soap:Envelope']['soap:Body']['ns1:addLoyaltyInfoResponse']['ns1:out'];
   console.log('addLoyaltyInfo result: '+ addLoyaltyResult);
 
+
   switch(addLoyaltyResult){
     case '0' : console.log('Loyalty Successfully attached!');
       this.getActiveCoupons(this.currentRetailer);
       break; 
-    case '-1' : console.warning('Invalid loyalty info'); break;
-    case '-2' : console.warning('Loyalty account has been added to a different merchant'); break;
-    case '-3' : console.warning('General server error'); break;
+    case '-1' : console.warn('Invalid loyalty info'); 
+      //oc: dispatch event to inform parent of the problem
+      var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Sorry', 'description':'Invalid loyalty info.'}});
+      this.dispatchEvent(showDialogEvent);
+      break;
+    case '-2' : console.warn('Loyalty account has been added to a different merchant'); break;
+    case '-3' : console.warn('General server error'); break;
     default: console.error('Unknown loyalty response code');
   }
 
@@ -233,7 +241,9 @@ proto._onGetActiveCoupons = function(soapResponse){
 
   if(isFound) {
     this.clipCoupon(this.currentCouponId, this.referenceId, this.partnerId, this.version);
-  } else console.warn('offer Id you are trying to clip was not found in active coupons list, you may have already clipped this. show dialog');
+  } else {
+    console.warn('offer Id you are trying to clip was not found in active coupons list, you may have already clipped this. show dialog');
+  }
 }//end function _onGetActiveCoupons
 
   /*

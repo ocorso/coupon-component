@@ -49,9 +49,14 @@ function onAddLoyaltyClick(event){
   var loyalty = document.getElementById('loyalty').value;
   merchantId = document.getElementById('retailers_select').value;
   var loyaltyDataObj = {};
-  loyaltyDataObj['mod:id'] = 1;
+  loyaltyDataObj['mod:id'] = 1;//oc: loyalty Id 1 is a loyalty #
   loyaltyDataObj['mod:value'] = loyalty;
   
   myCoupon.addLoyaltyInfo(loyaltyDataObj, merchantId);
 }//end function
+
+function showDialogHandler(event){
+  console.info('showDialogHandler');
+  console.debug(event.detail);
+}
    
