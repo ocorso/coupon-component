@@ -233,7 +233,7 @@ proto._onGetActiveCoupons = function(soapResponse){
 
   if(isFound) {
     this.clipCoupon(this.currentCouponId, this.referenceId, this.partnerId, this.version);
-  } else console.warn('offer Id you are trying to clip was not found in active coupons list, show dialog');
+  } else console.warn('offer Id you are trying to clip was not found in active coupons list, you may have already clipped this. show dialog');
 }//end function _onGetActiveCoupons
 
   /*

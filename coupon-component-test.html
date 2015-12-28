@@ -1,52 +1,48 @@
 <html>
 <head>
-    <title>Coupon Component Test</title>
-    <style>
+  <title>Coupon Component Test</title>
+  <style>
     *{ padding: 5px; margin: 5px; font-family: sans-serif;}
-        #attach_coupon{
-
-        }
-        form { border: 1px solid black;}
-        .hide{display: none;}
-        #success{ color: green;}
-    </style>
-	<!-- This script enables the use of jQuery in your ad: -->
+    #attach_coupon{}
+    form { border: 1px solid black;}
+    .hide{display: none;}
+    #success{ color: green;}
+  </style>
 	<script src="js/jquery.min.js"></script>
-    <script src="https://s0.2mdn.net/ads/studio/Enabler.js">
-    </script>
-    <script type="text/javascript" src="js/jquery.soap.js"></script>
-    <script type="text/javascript" src="js/xml2json.js"></script>
+  <script src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
+  <script type="text/javascript" src="js/jquery.soap.js"></script>
+  <script type="text/javascript" src="js/xml2json.js"></script>
 	<script type="text/javascript" src="js/coupon.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
 </head>
 <body onload="onload();">
 
-    <ored-coupon id="coupon"
-        data-auto-load
-        data-url="https://devapi.cellfire.com/services/QBridgeServiceV2"
-        data-api-type="cellfire"
-        data-api-key="y7zkry6e68dddhk6wmpwh5yv"
-        data-api-tlc="UNT25cU4aYnVtdE1RODQ1NGtBc01n#bum"
+  <ored-coupon id="my_coupon"
+    data-auto-load
+    data-url="https://devapi.cellfire.com/services/QBridgeServiceV2"
+    data-api-type="cellfire"
+    data-api-key="y7zkry6e68dddhk6wmpwh5yv"
+    data-api-tlc="UNT25cU4aYnVtdE1RODQ1NGtBc01n#bum"
     >
-    </ored-coupon>
+  </ored-coupon>
 
-    <h1>Hello Cellfire API Testing</h1>
-    <p><a href="Coupon Notes Doc">Coupon</a></p>
-    <form id="get_merchants" name="getMerchantsAndOffersResponse" action="" method="post">
-        <div>
-			<input type="button" value="Fetch Data" onclick="myCoupon.fetchData();" />
-            <input type="button" value="Exit" onclick="Enabler.exit('myExit');" />
-            <p id="success" class="hide">Success!</p>
-        </div>
-    </form>
-    <form id="attach_coupon" name="attachCoupon" action="">
-        <label>Choose Giant Eagle with the preset loyalty</label>
-        <select id="retailers_select">
-        </select>
-        <input id="phone" type="text" placeholder="Enter phone number" value="" />
-        <input id="loyalty" type="text" placeholder="Enter loyalty number" value="458009367"/>
-        <input id="pin" type="text" placeholder="Enter Pin" />
-        <input id="submit_btn" type="button" value="Add Loyalty Info" onclick="onSubmitClick();" />
-    </form>
+  <h1>Hello Cellfire API Testing</h1>
+  <p><a href="https://docs.google.com/document/d/17YMIl9wRBF7jMzeBWD9qt4LRBWdwPRaM09uYRUY7Ors/edit#" title="Coupon Notes Doc">Coupon Notes Doc</a> | <a href="https://docs.google.com/document/d/12TlZ06TRjvONZAPC-g_dwRHllRn86JVYQNFH9EPSFJg/edit#" title="Coupon Component Design Doc">Coupon Component Design Doc</a></p>
+  <form id="get_merchants" name="getMerchantsAndOffersResponse" action="" method="post">
+    <div>
+	    <input type="button" value="Fetch Data" onclick="myCoupon.fetchData();" />
+      <input type="button" value="Exit" onclick="Enabler.exit('myExit');" />
+      <p id="success" class="hide">Success!</p>
+    </div>
+  </form>
+  <form id="attach_coupon" name="attachCoupon" action="">
+    <label>Choose Giant Eagle with the preset loyalty</label>
+    <select id="retailers_select">
+    </select>
+    <input id="phone" type="text" placeholder="Enter phone number" value="" />
+    <input id="loyalty" type="text" placeholder="Enter loyalty number" value="458009367"/>
+    <input id="pin" type="text" placeholder="Enter Pin" />
+    <input id="submit_btn" type="button" value="Add Loyalty Info" onclick="onAddLoyaltyClick();" />
+  </form>
 </body>
 <html>

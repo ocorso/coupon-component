@@ -9,9 +9,13 @@ var offerIndex = 1;
 
 function onload(){ 
   console.log('onload');
-  myCoupon = document.getElementById('coupon');
-  myCoupon.addEventListener('FETCH_DATA_COMPLETE', onFetchData);
 
+  //oc: grap coupon component from the DOM
+  myCoupon = document.getElementById('my_coupon');
+
+  //oc: add event listeners
+  myCoupon.addEventListener('FETCH_DATA_COMPLETE', onFetchData);
+  myCoupon.addEventListener('SHOW_DIALOG', showDialogHandler);
 }
 
 function onFetchData(){
@@ -19,7 +23,7 @@ function onFetchData(){
 
   //oc: show happy green text
   $('#success').show();
-  
+
   //oc: populate select box
   var sel = document.getElementById('retailers_select');
   sel.innerHTML = '';
@@ -40,7 +44,7 @@ function onFetchData(){
   }//end for
 }//end function
 
-function onSubmitClick(event){
+function onAddLoyaltyClick(event){
   var offerId = myCoupon.offers[offerIndex]['offerId'];
   var loyalty = document.getElementById('loyalty').value;
   merchantId = document.getElementById('retailers_select').value;
