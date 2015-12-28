@@ -1,0 +1,49 @@
+<html>
+<head>
+    <title>SOAP JavaScript Client Test</title>
+    <style>
+    *{ padding: 5px; margin: 5px; font-family: sans-serif;}
+        #attach_coupon{
+
+        }
+        form { border: 1px solid black;}
+        .hide{display: none;}
+        #success{ color: green;}
+    </style>
+	<!-- This script enables the use of jQuery in your ad: -->
+	<script src="js/jquery.min.js"></script>
+    <script src="https://s0.2mdn.net/ads/studio/Enabler.js">
+    </script>
+	<!-- This script enables the use of jQuery in your ad: -->
+    <script type="text/javascript" src="js/jquery.soap.js"></script>
+    <script type="text/javascript" src="js/xml2json.js"></script>
+	<script type="text/javascript" src="js/coupon.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</head>
+<body onload="onload();">
+    <is-coupon id="coupon"
+        data-url="https://devapi.cellfire.com/services/QBridgeServiceV2"
+        data-api-key="y7zkry6e68dddhk6wmpwh5yv"
+        data-api-tlc="UNT25cU4aYnVtdE1RODQ1NGtBc01n#bum"
+    >
+    </is-coupon>
+    <h1>Hello Cellfire API Testing</h1>
+    <form id="get_merchants" name="getMerchantsAndOffersResponse" action="" method="post">
+        <div>
+			<input type="button" value="Fetch Data" onclick="myCoupon.fetchData();" />
+            <input type="button" value="Exit" onclick="Enabler.exit('myExit');" />
+            <p id="success" class="hide">Success!</p>
+        </div>
+    </form>
+    <form id="attach_coupon" name="attachCoupon" action="">
+        <label>Choose Giant Eagle with the preset loyalty</label>
+        <select id="retailers_select">
+        </select>
+        <input id="phone" type="text" placeholder="Enter phone number" value="" />
+        <input id="loyalty" type="text" placeholder="Enter loyalty number" value="458009367"/>
+        <input id="pin" type="text" placeholder="Enter Pin" />
+        <input id="submit_btn" type="button" value="Add Loyalty Info" onclick="onSubmitClick();" />
+        <input id="get_active_btn" type="button" value="Get Active Coupons" onclick="onGetActiveClick();" />
+    </form>
+</body>
+<html>
