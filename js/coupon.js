@@ -109,7 +109,7 @@ proto._onFetchData = function(soapResponse){
  *    -3 : [blank] 
  */
 proto.addLoyaltyInfo = function(loyaltyArr, merchantId){
-  console.info('com:addLoyaltyInfo');
+  console.info('addLoyaltyInfo()');
   
   //oc: store current merchant Id for later
   this.currentRetailer = merchantId;
@@ -233,7 +233,7 @@ proto._onGetActiveCoupons = function(soapResponse){
 
   if(isFound) {
     this.clipCoupon(this.currentCouponId, this.referenceId, this.partnerId, this.version);
-  } else console.warn('offer Id not found, show dialog');
+  } else console.warn('offer Id you are trying to clip was not found in active coupons list, show dialog');
 }//end function _onGetActiveCoupons
 
   /*
@@ -281,10 +281,10 @@ proto._onGetActiveCoupons = function(soapResponse){
 
     switch (statusCode){
       case '0' : 
-        console.log('coupon '+ this.currentCouponId + 'was successfully clipped');
+        console.log('coupon '+ this.currentCouponId + ' was successfully clipped');
         break;
       case '-10': 
-        console.warn('coupon ' + this.currentCouponId + 'was already clipped!');
+        console.warn('coupon ' + this.currentCouponId + ' was already clipped!');
         break;
       default : console.error('unknown/unhandled clipCoupon statusCode');
 
@@ -293,4 +293,4 @@ proto._onGetActiveCoupons = function(soapResponse){
   }//end function _onClipCoupon
 
 //oc: initialize coupon as a custom element in the DOM
-var coupon = document.registerElement('is-coupon', {prototype: proto});
+var coupon = document.registerElement('ored-coupon', {prototype: proto});

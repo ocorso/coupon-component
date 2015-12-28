@@ -14,7 +14,6 @@
 	<script src="js/jquery.min.js"></script>
     <script src="https://s0.2mdn.net/ads/studio/Enabler.js">
     </script>
-	<!-- This script enables the use of jQuery in your ad: -->
     <script type="text/javascript" src="js/jquery.soap.js"></script>
     <script type="text/javascript" src="js/xml2json.js"></script>
 	<script type="text/javascript" src="js/coupon.js"></script>
@@ -22,15 +21,17 @@
 </head>
 <body onload="onload();">
 
-    <is-coupon id="coupon"
+    <ored-coupon id="coupon"
         data-auto-load
         data-url="https://devapi.cellfire.com/services/QBridgeServiceV2"
         data-api-type="cellfire"
         data-api-key="y7zkry6e68dddhk6wmpwh5yv"
         data-api-tlc="UNT25cU4aYnVtdE1RODQ1NGtBc01n#bum"
     >
-    </is-coupon>
+    </ored-coupon>
+
     <h1>Hello Cellfire API Testing</h1>
+    <p><a href="Coupon Notes Doc">Coupon</a></p>
     <form id="get_merchants" name="getMerchantsAndOffersResponse" action="" method="post">
         <div>
 			<input type="button" value="Fetch Data" onclick="myCoupon.fetchData();" />
