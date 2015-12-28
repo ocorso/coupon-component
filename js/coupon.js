@@ -11,6 +11,8 @@ proto.createdCallback = function() {
   console.info('createdCallback');
   this.merchantsAndOffers = null;
   this.url = this.getAttribute('data-url');//'https://devapi.cellfire.com/services/QBridgeServiceV2'; //url: 'http://api.cellfire.com/services/QBridgeServiceV2',
+  this.autoLoad = this.hasAttribute('data-auto-load') ? true : false;
+  this.apiType = this.getAttribute('data-api-type');
   this.apiKey = this.getAttribute('data-api-key');//'y7zkry6e68dddhk6wmpwh5yv' 
   this.apiTlc = this.getAttribute('data-api-tlc');//'UNT25cU4aYnVtdE1RODQ1NGtBc01n#bum';
   this.offers = [];
@@ -32,6 +34,7 @@ proto.createdCallback = function() {
 };
 proto.attachedCallback = function() {
   console.info('attachedCallback');
+  if(this.autoLoad) this.fetchData();
 };
 
 /*
@@ -165,7 +168,8 @@ proto._onAddLoyaltyInfo = function(data){
 /*
  * This function asks the Cellfire API for the active coupons
  * for a given retailer. Active coupon retrieval prevents users 
- * from attempting to clip the same coupon over and over.
+ * from attempting to clip an old or previously clipped coupon.
+ *
  * API function name : getActiveCouponsByRetailer
  * @param String referenceID - Reference ID from partner
  * @param String partnerID - Partner name and OS platform
@@ -173,6 +177,7 @@ proto._onAddLoyaltyInfo = function(data){
  * @return Object[] QCouponLite : Array of coupon objects 
 */
 proto.getActiveCoupons = function(merchantId){
+  console.info('getActiveCoupons');
   //oc: getActiveCouponsByRetailer
 
   //oc: prepare parameters
@@ -204,7 +209,8 @@ proto.getActiveCoupons = function(merchantId){
 
 /*
  * This function handles the getActiveCouponsByRetailer response
- * The purpose of this is to prevent users from clipping the same coupon over and over
+ * The purpose of this is to ensure users are successfully attached to a 
+ * retailer's loyalty account before attempting to clip a coupon
  */
 proto._onGetActiveCoupons = function(soapResponse){
     console.info('_onGetActiveCoupons');
@@ -271,7 +277,20 @@ proto._onGetActiveCoupons = function(soapResponse){
     var data = response['#document']['soap:Envelope']['soap:Body']['ns1:clipCouponResponse']['ns1:out'];
     console.log(data);
 
+    var statusCode = data['ns2:QClipResponse']['statusCode']['_'];
 
-  }
+    switch (statusCode){
+      case '0' : 
+        console.log('coupon '+ this.currentCouponId + 'was successfully clipped');
+        break;
+      case '-10': 
+        console.warn('coupon ' + this.currentCouponId + 'was already clipped!');
+        break;
+      default : console.error('unknown/unhandled clipCoupon statusCode');
+
+    }//end switch
+
+  }//end function _onClipCoupon
+
 //oc: initialize coupon as a custom element in the DOM
 var coupon = document.registerElement('is-coupon', {prototype: proto});
