@@ -58,5 +58,6 @@ function onAddLoyaltyClick(event){
 function showDialogHandler(event){
   console.info('showDialogHandler');
   console.debug(event.detail);
+  alert(event.detail.description);
 }
    
