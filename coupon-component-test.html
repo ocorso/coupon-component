@@ -7,6 +7,7 @@
     form { border: 1px solid black;}
     .hide{display: none;}
     #success{ color: green;}
+    .auth{ width: 160px;}
   </style>
 	<script src="js/jquery.min.js"></script>
   <script src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
@@ -28,6 +29,7 @@
   </ored-coupon>
 
   <h1>Cellfire API Testing</h1>
+  <h2>Don't forget to accept the faulty SSL<a href="https://devapi.cellfire.com/services/QBridgeServiceV2" title="here">here</a></h2>
   <p><a href="https://docs.google.com/document/d/17YMIl9wRBF7jMzeBWD9qt4LRBWdwPRaM09uYRUY7Ors/edit#" title="Coupon Notes Doc">Coupon Notes Doc</a> | <a href="https://docs.google.com/document/d/12TlZ06TRjvONZAPC-g_dwRHllRn86JVYQNFH9EPSFJg/edit#" title="Coupon Component Design Doc">Coupon Component Design Doc</a></p>
   <form id="get_merchants" name="getMerchantsAndOffersResponse" action="" method="post">
     <div>
@@ -37,13 +39,21 @@
     </div>
   </form>
   <form id="attach_coupon" name="attachCoupon" action="">
-    <label>Choose Giant Eagle with the preset loyalty</label>
-    <select id="retailers_select">
-    </select>
-    <input id="phone" type="text" placeholder="Enter phone number" value="" />
-    <input id="loyalty" type="text" placeholder="Enter loyalty number" value="458009367"/>
-    <input id="pin" type="text" placeholder="Enter Pin" />
-    <input id="submit_btn" type="button" value="Add Loyalty Info" onclick="onAddLoyaltyClick();" />
+    <label>Offer & Retailer selectors</label>
+    <fieldset>
+      <label>Offers</label>
+      <select id="offers_select"></select>
+      <label>Retailers</label>
+      <select id="retailers_select">
+      </select>
+    </fieldset>
+    <label>Loyalty Info</label>
+    <fieldset id="validation_fields">
+      <input id="loyalty" type="text" placeholder="Enter loyalty number" value="458009367"/>
+      <p>OR</p>
+      <input id="phone" type="text" placeholder="Enter phone number" value="" />
+    </fieldset>
+      <input id="submit_btn" type="button" value="Add Loyalty Info" onclick="onAddLoyaltyClick();" />
   </form>
 </body>
 <html>
