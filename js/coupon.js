@@ -191,7 +191,7 @@ proto._onAddLoyaltyInfo = function(data){
  * @return Object[] QCouponLite : Array of coupon objects 
 */
 proto.getActiveCoupons = function(merchantId){
-  console.info('getActiveCoupons');
+  console.info('getActiveCoupons: '+ merchantId);
   //oc: getActiveCouponsByRetailer
 
   //oc: prepare parameters
@@ -227,7 +227,7 @@ proto.getActiveCoupons = function(merchantId){
  * retailer's loyalty account before attempting to clip a coupon
  */
 proto._onGetActiveCoupons = function(soapResponse){
-    console.info('_onGetActiveCoupons');
+  console.info('_onGetActiveCoupons');
   var response = soapResponse.toJSON();
   var getActiveCouponsResult = response['#document']['soap:Envelope']['soap:Body']['ns1:getActiveCouponsByRetailerResponse']['ns1:out'];
   console.log(getActiveCouponsResult);

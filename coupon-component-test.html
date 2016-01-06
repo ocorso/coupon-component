@@ -2,7 +2,8 @@
 <head>
   <title>Coupon Component Test</title>
   <style>
-    *{ padding: 5px; margin: 5px; font-family: sans-serif;}
+    *{ padding: 2px; margin: 2px; font-family: sans-serif;}
+    h2{color: red;}
     #attach_coupon{}
     form { border: 1px solid black;}
     .hide{display: none;}
@@ -35,7 +36,7 @@
     <div>
 	    <input type="button" value="Fetch Data" onclick="myCoupon.fetchData();" />
       <input type="button" value="Exit" onclick="Enabler.exit('myExit');" />
-      <p id="success" class="hide">Success!</p>
+      <p id="success" class="hide">Fetch Data Success!</p>
     </div>
   </form>
   <form id="attach_coupon" name="attachCoupon" action="">
@@ -49,9 +50,6 @@
     </fieldset>
     <label>Loyalty Info</label>
     <fieldset id="validation_fields">
-      <input id="loyalty" type="text" placeholder="Enter loyalty number" value="458009367"/>
-      <p>OR</p>
-      <input id="phone" type="text" placeholder="Enter phone number" value="" />
     </fieldset>
       <input id="submit_btn" type="button" value="Add Loyalty Info" onclick="onAddLoyaltyClick();" />
   </form>

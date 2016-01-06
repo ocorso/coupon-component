@@ -55,15 +55,6 @@ function updateRetailerSelectBox(event){
 /*
  * This function adjusts the UI appropriately for each merchant's preferred
  * loyalty authentication method.
- * validationID is used to identify the type of the field. 
- * validationID can have the following values:
- *  •   1 (Loyalty Card)
- *  •   2 (Phone Number)
- *  •   3 (PIN)
- *  •   4 (Shopper ID)
- *  •   5 (Email ID)
- *  •   6 (Username)
- *  •   7 (Password)
  *  
  */
 function updateLoyaltyFields(event){
@@ -100,27 +91,87 @@ function updateLoyaltyFields(event){
 
 };//end function updateLoyalty fields
 
+
 function parseValidationFields(validationFields){
   console.info('parseValidationFields()');
   console.log(validationFields);
   if(validationFields['QLoyaltyValidationField']['0']){
     console.log('we have multiple fields in this model');
+    for(var i = 0; i< validationFields['QLoyaltyValidationField'].length; i++){
+        validationFieldsElement.appendChild(createValidationField(validationFields['QLoyaltyValidationField'][i]));
+    }
   }else{
     console.log('we have only 1 field: '+validationFields['QLoyaltyValidationField']['name']);
-    var fieldToAdd = createValidationField(validationFields['QLoyaltyValidationField']);
-    validationFieldsElement.appendChild(fieldToAdd);
+    validationFieldsElement.appendChild(createValidationField(validationFields['QLoyaltyValidationField']));
 
   }//end else
 }//end function
+
+/*
+ * This function creates a validation field
+ * validationID is used to identify the type of the field. 
+ * validationID can have the following values:
+ *  •   1 (Loyalty Card)
+ *  •   2 (Phone Number)
+ *  •   3 (PIN)
+ *  •   4 (Shopper ID)
+ *  •   5 (Email ID)
+ *  •   6 (Username)
+ *  •   7 (Password)
+ *
+ */
 function createValidationField(field){
   var input = document.createElement('input');
   input.type = 'text';
   input.placeholder = 'Enter '+ field['name'];
-  input.dataValidationId = field['validationID'];
-  input.id = 'validation_type_' + field['validationID'];
+  input.dataset.validationId = field['validationID'];//oc: https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes
+  var id;
+  switch(field['validationID']){
+    case '1' : id = 'loyalty';
+      break;
+    case '2' : id = 'phone';
+      break;
+    case '3' : id = 'pin';
+      break;
+    case '4' : id = 'shopper_id';
+      break;
+    case '5' : id = 'email';
+      break;
+    case '6' : id = 'username';
+      break;
+    case '7' : id = 'password';
+      break;
+    default : console.warn('Unknown validationID');
+      id = 'validationId' + field['validationID'];
+  }//end switch
+  input.id = id;
   input.className = 'auth';
   return input;
-}
+}//end function
+
+function prepareLoyaltyData(){
+  console.info('prepareLoyaltyData()');
+  var loyaltyData = [];
+
+  $('#validation_fields input').each(function(index){
+    console.log('value: '+ this.value);
+    if(this.value != ''){
+      var loyaltyDataObj = {
+        'mod:id': this.dataset.validationId,
+        'mod:value': this.value
+      };
+      loyaltyData.push(loyaltyDataObj);  
+    }//end if
+
+  });
+  return loyaltyData;
+    
+
+  // var loyalty = document.getElementById('loyalty').value;
+  // var loyaltyDataObj = {};
+  // loyaltyDataObj['mod:id'] = 1;//oc: loyalty Id 1 is a loyalty #
+  // loyaltyDataObj['mod:value'] = loyalty;
+}//end function
 
 function onFetchData(){
   console.info('onFetchData');
@@ -147,14 +198,14 @@ function onFetchData(){
 }//end function
 
 function onAddLoyaltyClick(event){
-  var offerId = myCoupon.offers[offersSelectBoxElement.value]['offerId'];
-  var loyalty = document.getElementById('loyalty').value;
+  console.info('onAddLoyaltyClick()');
+
   merchantId = retailerSelectBoxElement.value;
-  var loyaltyDataObj = {};
-  loyaltyDataObj['mod:id'] = 1;//oc: loyalty Id 1 is a loyalty #
-  loyaltyDataObj['mod:value'] = loyalty;
-  
-  myCoupon.addLoyaltyInfo(loyaltyDataObj, merchantId);
+
+  //oc: prepare loyaltyData[]
+  var loyaltyData = prepareLoyaltyData();
+  console.debug(loyaltyData);
+  myCoupon.addLoyaltyInfo(loyaltyData, merchantId);
 }//end function
 
 function showDialogHandler(event){
