@@ -236,23 +236,35 @@ proto._onGetActiveCoupons = function(soapResponse){
   //oc: search for currentOfferId in the coupon array
   var isFound = false;
   console.debug('current offerId: '+this.currentOfferId);
-  for(var c of couponArr){
-    if (this.currentOfferId == c['offerId']['_']){
-      isFound = true;
-      console.log('coupon Id to clip: '+c['couponId']['_']);
-      this.currentCouponId = c['couponId']['_'];
-      break;
-    }//end if
-  }//end for
+  if(getActiveCouponsResult == ''){
+    console.warn('Response is EMPTY!!');
+    var showDialogEvent = new CustomEvent('SHOW_DIALOG', 
+      {'detail':{
+        'headline': 'Sorry', 
+        'description':'No active coupons were returned for this retailer. You may have already clipped all possible.'
+      }
+    });
+    this.dispatchEvent(showDialogEvent);
+    
+  }else{
+    for(var c of couponArr){
+      if (this.currentOfferId == c['offerId']['_']){
+        isFound = true;
+        console.log('coupon Id to clip: '+c['couponId']['_']);
+        this.currentCouponId = c['couponId']['_'];
+        break;
+      }//end if
+    }//end for
+    if(isFound) {
+      this.clipCoupon(this.currentCouponId, this.referenceId, this.partnerId, this.version);
+    } else {
+      console.warn('offer Id you are trying to clip was not found in active coupons list, you may have already clipped this. show dialog');
+        //oc: dispatch event to inform parent of the problem
+        var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Sorry', 'description':'This offer was not found in the active coupons list and may have already been clipped to your loyalty account.'}});
+        this.dispatchEvent(showDialogEvent);
+    }
+  }//end else
 
-  if(isFound) {
-    this.clipCoupon(this.currentCouponId, this.referenceId, this.partnerId, this.version);
-  } else {
-    console.warn('offer Id you are trying to clip was not found in active coupons list, you may have already clipped this. show dialog');
-      //oc: dispatch event to inform parent of the problem
-      var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Sorry', 'description':'This offer was not found in active coupons list and may already be clipped to your loyalty account.'}});
-      this.dispatchEvent(showDialogEvent);
-  }
 }//end function _onGetActiveCoupons
 
   /*
