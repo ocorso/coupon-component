@@ -231,8 +231,8 @@ proto._onGetActiveCoupons = function(soapResponse){
   var response = soapResponse.toJSON();
   var getActiveCouponsResult = response['#document']['soap:Envelope']['soap:Body']['ns1:getActiveCouponsByRetailerResponse']['ns1:out'];
   console.log(getActiveCouponsResult);
-  var couponArr = getActiveCouponsResult['ns2:QCouponLite'];
-
+  var activeCoupons = getActiveCouponsResult['ns2:QCouponLite'];
+  console.log('activeCoupons length: '+activeCoupons.length);
   //oc: search for currentOfferId in the coupon array
   var isFound = false;
   console.debug('current offerId: '+this.currentOfferId);
@@ -246,15 +246,31 @@ proto._onGetActiveCoupons = function(soapResponse){
     });
     this.dispatchEvent(showDialogEvent);
     
-  }else{
-    for(var c of couponArr){
-      if (this.currentOfferId == c['offerId']['_']){
+  }else {
+
+    if (activeCoupons[0]){
+      //oc: multiple active coupons
+      for(var c of activeCoupons){
+        console.debug('looping coupon array');
+        if (this.currentOfferId == c['offerId']['_']){
+          isFound = true;
+          console.log('coupon Id to clip: '+c['couponId']['_']);
+          this.currentCouponId = c['couponId']['_'];
+          break;
+        }//end if
+      }//end for
+      
+    } else{
+      //oc: only 1 active coupon, access directly
+      console.log(activeCoupons);
+      if (this.currentOfferId == activeCoupons['offerId']['_']){
         isFound = true;
-        console.log('coupon Id to clip: '+c['couponId']['_']);
-        this.currentCouponId = c['couponId']['_'];
-        break;
+        console.log('coupon Id to clip: '+activeCoupons['couponId']['_']);
+        this.currentCouponId = activeCoupons['couponId']['_'];
       }//end if
-    }//end for
+    }//end else
+
+    //oc: dispatch if we matched an active coupon.
     if(isFound) {
       this.clipCoupon(this.currentCouponId, this.referenceId, this.partnerId, this.version);
     } else {

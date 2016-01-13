@@ -1,7 +1,5 @@
 //oc:   launch chrome with Web Security turned off
 //      /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --disable-web-security
-
-var response;
 var myCoupon;
 var offersSelectBoxElement;
 var retailerSelectBoxElement;
@@ -125,26 +123,6 @@ function createValidationField(field){
   input.type = 'text';
   input.placeholder = 'Enter '+ field['name'];
   input.dataset.validationId = field['validationID'];//oc: https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes
-  var id;
-  switch(field['validationID']){
-    case '1' : id = 'loyalty';
-      break;
-    case '2' : id = 'phone';
-      break;
-    case '3' : id = 'pin';
-      break;
-    case '4' : id = 'shopper_id';
-      break;
-    case '5' : id = 'email';
-      break;
-    case '6' : id = 'username';
-      break;
-    case '7' : id = 'password';
-      break;
-    default : console.warn('Unknown validationID');
-      id = 'validationId' + field['validationID'];
-  }//end switch
-  input.id = id;
   input.className = 'auth';
   return input;
 }//end function
