@@ -127,6 +127,12 @@ function createValidationField(field){
   return input;
 }//end function
 
+/*
+ * This function loops through the loyalty fields and prepares 
+ * the value object that will be passed to the coupon API via the component.
+ * @return array loyaltyData - an array of properly formatted objects  
+ */
+
 function prepareLoyaltyData(){
   console.info('prepareLoyaltyData()');
   var loyaltyData = [];
@@ -144,11 +150,6 @@ function prepareLoyaltyData(){
   });
   return loyaltyData;
     
-
-  // var loyalty = document.getElementById('loyalty').value;
-  // var loyaltyDataObj = {};
-  // loyaltyDataObj['mod:id'] = 1;//oc: loyalty Id 1 is a loyalty #
-  // loyaltyDataObj['mod:value'] = loyalty;
 }//end function
 
 function onFetchData(){
