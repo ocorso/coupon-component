@@ -171,10 +171,12 @@ proto._onAddLoyaltyInfo = function(data){
       //oc: dispatch event to inform parent of the problem
       var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Sorry', 'description':'Your loyalty account has been added to a different merchant.'}});
       this.dispatchEvent(showDialogEvent);
-    case '-3' : console.warn('General server error'); break;
+      break;
+    case '-3' : console.warn('General server error');
       //oc: dispatch event to inform parent of the problem
       var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Sorry', 'description':'There was an error adding your loyalty account.'}});
       this.dispatchEvent(showDialogEvent);
+      break;
     default: console.error('Unknown loyalty response code');
   }
 
