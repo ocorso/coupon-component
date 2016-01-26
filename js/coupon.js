@@ -23,7 +23,7 @@ proto.createdCallback = function() {
   this.imgPrefix = null; //http://devimages.cellfire.com/<folder>/<id>_<size>.png size can be 300
   this.version = null;
   this.partnerId = 'PG_GDN_Lightbox';
-  this.referenceId = Math.round(Math.random() * new Date().getTime());
+  this.referenceId = Math.round(Math.random() * new Date().getTime());//oc: this is unique for each session 
   this.envAttributes = {
     'xmlns:com': 'com.cellfire.webservice.QBridgeServiceV2',
     'xmlns:mod': 'http://model.qbridge.webservice.cellfire.com'
@@ -164,17 +164,17 @@ proto._onAddLoyaltyInfo = function(data){
       break; 
     case '-1' : console.warn('Invalid loyalty info'); 
       //oc: dispatch event to inform parent of the problem
-      var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Sorry', 'description':'Invalid loyalty info.'}});
+      var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{'statusCode': '', 'action':'', 'headline': 'Sorry', 'description':'Invalid loyalty info.'}});
       this.dispatchEvent(showDialogEvent);
       break;
     case '-2' : console.warn('Loyalty account has been added to a different merchant.'); break;
       //oc: dispatch event to inform parent of the problem
-      var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Sorry', 'description':'Your loyalty account has been added to a different merchant.'}});
+      var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{'statusCode': '', 'action':'', 'headline': 'Sorry', 'description':'Your loyalty account has been added to a different merchant.'}});
       this.dispatchEvent(showDialogEvent);
       break;
     case '-3' : console.warn('General server error');
       //oc: dispatch event to inform parent of the problem
-      var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Sorry', 'description':'There was an error adding your loyalty account.'}});
+      var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{'statusCode': '', 'action':'', 'headline': 'Sorry', 'description':'There was an error adding your loyalty account.'}});
       this.dispatchEvent(showDialogEvent);
       break;
     default: console.error('Unknown loyalty response code');
@@ -218,6 +218,14 @@ proto.getActiveCoupons = function(merchantId){
     error: function(SOAPResponse) {
       //oc show error
       console.error('_onSOAPResponse fail: ', SOAPResponse);
+        //oc: dispatch event to inform parent of the result
+        var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+            'statusCode': '-1', //oc: generic unknown error
+            'action':'getActiveCoupons', 
+            'headline': 'IO Error.', 
+            'description':'Failed to load results.'
+          }});
+        this.dispatchEvent(showDialogEvent);
     }
   });
 
@@ -227,6 +235,10 @@ proto.getActiveCoupons = function(merchantId){
  * This function handles the getActiveCouponsByRetailer response
  * The purpose of this is to ensure users are successfully attached to a 
  * retailer's loyalty account before attempting to clip a coupon
+ * 
+ *  Status Code key for action : getActiveCouponsByRetailer
+ *    1 - No active coupons were returned for this retailer. You may have already clipped all possible coupons.
+ *    2 - This offer was not found in the active coupons list and may have already been clipped to your loyalty account.
  */
 proto._onGetActiveCoupons = function(soapResponse){
   console.info('_onGetActiveCoupons');
@@ -240,12 +252,13 @@ proto._onGetActiveCoupons = function(soapResponse){
   console.debug('current offerId: '+this.currentOfferId);
   if(getActiveCouponsResult == ''){
     console.warn('Response is EMPTY!!');
-    var showDialogEvent = new CustomEvent('SHOW_DIALOG', 
-      {'detail':{
+    var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', 
+      { 'detail':{
+        'statusCode': '1',
+        'action':'getActiveCouponsByRetailer', 
         'headline': 'Sorry', 
-        'description':'No active coupons were returned for this retailer. You may have already clipped all possible.'
-      }
-    });
+        'description':'No active coupons were returned for this retailer. You may have already clipped all possible coupons.'
+      }});
     this.dispatchEvent(showDialogEvent);
     
   }else {
@@ -278,7 +291,12 @@ proto._onGetActiveCoupons = function(soapResponse){
     } else {
       console.warn('offer Id you are trying to clip was not found in active coupons list, you may have already clipped this. show dialog');
         //oc: dispatch event to inform parent of the problem
-        var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Sorry', 'description':'This offer was not found in the active coupons list and may have already been clipped to your loyalty account.'}});
+        var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+            'statusCode': '2', 
+            'action':'getActiveCouponsByRetailer', 
+            'headline': 'Sorry', 
+            'description':'This offer was not found in the active coupons list and may have already been clipped to your loyalty account.'
+          }});
         this.dispatchEvent(showDialogEvent);
     }
   }//end else
@@ -315,11 +333,30 @@ proto._onGetActiveCoupons = function(soapResponse){
       error: function(SOAPResponse) {
         // show error
         console.error('soap fail: ', SOAPResponse);
+        //oc: dispatch event to inform parent of the result
+        var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+            'statusCode': '-1', //oc: generic unknown error
+            'action':'clipCoupon', 
+            'headline': 'IO Error.', 
+            'description':'Failed to load results.'
+          }});
+        this.dispatchEvent(showDialogEvent);
       }
     });
 
   } //end function clipCoupon
 
+  /*
+   * This function handles the clipCoupon response by dispatching the corresponding statusCode to the parent.
+   * @param soapResponse - Object, the coupon API response object.
+   *
+   * Status Code key for action : clipCoupon
+   *    0  - This offer was successfully clipped to your loyalty account.
+   *   -1  - An unknown error has occurred.
+   *   -7  - The clip failed. Please try again later.
+   *   -8  - Loyalty account not found.
+   *   -10 - This offer was already clipped.
+   */
   proto._onClipCoupon = function (soapResponse){
     console.log('clipCoupon complete');
     response = soapResponse.toJSON();
@@ -332,29 +369,56 @@ proto._onGetActiveCoupons = function(soapResponse){
       case '0' : 
         console.log('coupon '+ this.currentCouponId + ' was successfully clipped');
         //oc: dispatch event to inform parent of the result
-        var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Success.', 'description':'This offer was successfully clipped to your loyalty account.'}});
+        var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+            'statusCode': '0', 
+            'action':'clipCoupon', 
+            'headline': 'Success.', 
+            'description':'This offer was successfully clipped to your loyalty account.'
+          }});
         this.dispatchEvent(showDialogEvent);
         break;
       case '-7': 
         console.warn('coupon ' + this.currentCouponId + ' failed to clip to the loyalty account');
         //oc: dispatch event to inform parent of the result
-        var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Sorry.', 'description':'The clip failed. Please try again later.'}});
+        var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+            'statusCode': '-7', 
+            'action':'clipCoupon', 
+            'headline': 'Sorry.', 
+            'description':'The clip failed. Please try again later.'
+          }});
         this.dispatchEvent(showDialogEvent);
         break;
       case '-8': 
         console.warn('loyalty account not found');
         //oc: dispatch event to inform parent of the result
-        var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Loyalty account not found.', 'description':'Please check your loyalty account info and try again.'}});
+        var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+            'statusCode': '-8', 
+            'action':'clipCoupon', 
+            'headline': 'Loyalty account not found.', 
+            'description':'Please check your loyalty account info and try again.'
+          }});
         this.dispatchEvent(showDialogEvent);
         break;
       case '-10': 
         console.warn('coupon ' + this.currentCouponId + ' was already clipped!');
         //oc: dispatch event to inform parent of the result
-        var showDialogEvent = new CustomEvent('SHOW_DIALOG', {'detail':{'headline': 'Sorry.', 'description':'This offer was already clipped.'}});
+        var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+            'statusCode': '-10', 
+            'action':'clipCoupon', 
+            'headline': 'Sorry.', 
+            'description':'This offer was already clipped.'
+          }});
         this.dispatchEvent(showDialogEvent);
         break;
       default : console.error('unknown/unhandled clipCoupon statusCode');
-
+        //oc: dispatch event to inform parent of the result
+        var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+            'statusCode': '-1', //oc: generic unknown error
+            'action':'clipCoupon', 
+            'headline': 'Sorry.', 
+            'description':'An unknown error has occurred.'
+          }});
+        this.dispatchEvent(showDialogEvent);
     }//end switch
 
   }//end function _onClipCoupon

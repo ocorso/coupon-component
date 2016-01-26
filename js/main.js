@@ -16,7 +16,7 @@ function onload(){
 
   //oc: add event listeners
   myCoupon.addEventListener('FETCH_DATA_COMPLETE', onFetchData);
-  myCoupon.addEventListener('SHOW_DIALOG', showDialogHandler);
+  myCoupon.addEventListener('MESSAGE_RECEIVED', showDialogHandler);
 
   //oc: offers select box
   offersSelectBoxElement = document.getElementById('offers_select');
