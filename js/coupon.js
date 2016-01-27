@@ -180,7 +180,7 @@ proto._onAddLoyaltyInfo = function(data){
         }});
       this.dispatchEvent(showDialogEvent);
       break;
-    case '-2' : console.warn('Loyalty account has been added to a different merchant.'); break;
+    case '-2' : console.warn('Loyalty account has been added to a different merchant.');
       //oc: dispatch event to inform parent of the problem
       var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
           'statusCode': '-2',
