@@ -47,6 +47,11 @@ function updateRetailerSelectBox(event){
     retailerSelectBoxElement.appendChild(opt); // add opt to end of retailerSelectBoxElement
   }//end for
 
+ //oc: sort the merchants
+    $(retailerSelectBoxElement).html($("#retailers_select option").sort(function(a, b) {
+        return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+    }))
+    
   updateLoyaltyFields();
 };
 

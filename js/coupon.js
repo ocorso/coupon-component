@@ -150,6 +150,13 @@ proto.addLoyaltyInfo = function(loyaltyArr, merchantId){
  * This function handles the response to addLoyaltyInfo
  * If the loyalty card was successfully added to service, getActiveCoupons is automatically called
  * If unsuccessful and a dialog needs to be shown to the user, an event is dispatched
+ * 
+ * Status Code key for action : addLoyaltyInfo
+ * 0  - Successfully attached loyalty:: no event dispatched
+ * -1 - Invalid Loyalty info.
+ * -2 - Loyalty account has been added to a different merchant.
+ * -3 - General server error.
+ * -4 - Unknown response code when adding your loyalty account.
  */
 proto._onAddLoyaltyInfo = function(data){
   console.info('_onAddLoyaltyInfo');
@@ -160,27 +167,53 @@ proto._onAddLoyaltyInfo = function(data){
 
   switch(addLoyaltyResult){
     case '0' : console.log('Loyalty Successfully attached!');
+      //oc: immediately getActiveCoupons
       this.getActiveCoupons(this.currentRetailer);
       break; 
     case '-1' : console.warn('Invalid loyalty info'); 
       //oc: dispatch event to inform parent of the problem
-      var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{'statusCode': '', 'action':'', 'headline': 'Sorry', 'description':'Invalid loyalty info.'}});
+      var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+          'statusCode': '-1',
+          'action':'addLoyaltyInfo', 
+          'headline': 'Sorry', 
+          'description':'Invalid loyalty info.'
+        }});
       this.dispatchEvent(showDialogEvent);
       break;
     case '-2' : console.warn('Loyalty account has been added to a different merchant.'); break;
       //oc: dispatch event to inform parent of the problem
-      var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{'statusCode': '', 'action':'', 'headline': 'Sorry', 'description':'Your loyalty account has been added to a different merchant.'}});
+      var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+          'statusCode': '-2',
+          'action':'addLoyaltyInfo', 
+          'headline': 'Sorry', 
+          'description':'Your loyalty account has been added to a different merchant.'
+        }});
       this.dispatchEvent(showDialogEvent);
       break;
     case '-3' : console.warn('General server error');
       //oc: dispatch event to inform parent of the problem
-      var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{'statusCode': '', 'action':'', 'headline': 'Sorry', 'description':'There was an error adding your loyalty account.'}});
+      var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+          'statusCode': '-3',
+          'action':'addLoyaltyInfo', 
+          'headline': 'Sorry', 
+          'description':'There was an error adding your loyalty account.'
+        }});
       this.dispatchEvent(showDialogEvent);
       break;
     default: console.error('Unknown loyalty response code');
-  }
+      //oc: dispatch event to inform parent of the problem
+      var showDialogEvent = new CustomEvent('MESSAGE_RECEIVED', {'detail':{
+          'statusCode': '-4',
+          'action':'addLoyaltyInfo', 
+          'headline': 'Sorry', 
+          'description':'There was an unknown response code when adding your loyalty account.'
+        }});
+      this.dispatchEvent(showDialogEvent);
 
-}//end function
+  }//end switch
+
+}//end function _onAddLoyaltyInfo
+
 /*
  * This function asks the Cellfire API for the active coupons
  * for a given retailer. Active coupon retrieval prevents users 
@@ -242,11 +275,13 @@ proto.getActiveCoupons = function(merchantId){
  */
 proto._onGetActiveCoupons = function(soapResponse){
   console.info('_onGetActiveCoupons');
+  
+  //oc: drill down to get active coupon list.
   var response = soapResponse.toJSON();
   var getActiveCouponsResult = response['#document']['soap:Envelope']['soap:Body']['ns1:getActiveCouponsByRetailerResponse']['ns1:out'];
   console.log(getActiveCouponsResult);
   var activeCoupons = getActiveCouponsResult['ns2:QCouponLite'];
-  console.log('activeCoupons length: '+activeCoupons.length);
+
   //oc: search for currentOfferId in the coupon array
   var isFound = false;
   console.debug('current offerId: '+this.currentOfferId);
