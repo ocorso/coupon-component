@@ -31,6 +31,7 @@ proto.createdCallback = function() {
 
   //oc: offer specific variables
   this.currentRetailer = null;
+  this.isCurrentRetailerAdded = false;
   this.currentOfferId = null;
   this.currentCouponId = null;
 
@@ -79,7 +80,7 @@ proto._onFetchData = function(soapResponse){
   var data = response['#document']['soap:Envelope']['soap:Body']['ns1:getMerchantsAndOffersResponse']['ns1:out'];
 
   //oc: save data
-  this.imgPrefix = data['imageUrl']['_'];
+  this.imgPrefix = data['imageUrl']['_'].replace('http://','https://');//oc: switch to https
   this.offers = data['offers']['QOffer'];
   this.version = data['version']['_'];
 
@@ -114,35 +115,43 @@ proto._onFetchData = function(soapResponse){
 proto.addLoyaltyInfo = function(loyaltyArr, merchantId){
   console.info('addLoyaltyInfo()');
   
-  //oc: store current merchant Id for later
-  this.currentRetailer = merchantId;
+  if(merchantId == this.currentRetailer && this.isCurrentRetailerAdded){
+    //oc: skip directly to requesting current active coupons.
+    console.debug('already added loyalty, skip to getActiveCoupons');
+    this.getActiveCoupons(this.currentRetailer);
+  }else{
+    //oc: store current merchant Id for later
+    this.isCurrentRetailerAdded = false;
+    this.currentRetailer = merchantId;
 
-  //oc: prepare data for SOAP request
-  var data = {};
-      data['com:in0'] = this.referenceId;
-      data['com:in1'] = this.partnerId;
-      data['com:in2'] = {};
-      data['com:in2']['mod:LoyaltyData'] = loyaltyArr;
-      data['com:in3'] = merchantId;
+    //oc: prepare data for SOAP request
+    var data = {};
+        data['com:in0'] = this.referenceId;
+        data['com:in1'] = this.partnerId;
+        data['com:in2'] = {};
+        data['com:in2']['mod:LoyaltyData'] = loyaltyArr;
+        data['com:in3'] = merchantId;
+      
+    //oc: make the soap request.
+    $.soap({
+      url: this.url,
+      method: 'com:addLoyaltyInfo',
+      HTTPHeaders: { 
+        'Api-Key': this.apiKey,
+        'tlc': this.apiTlc
+      },
+      data: data,
+      appendMethodToURL: false, // method name will be appended to URL defaults to true
+      soap12: false,
+      envAttributes: this.envAttributes,
+      success: this._onAddLoyaltyInfo.bind(this),//make sure this is the right this 
+      error: function(SOAPResponse) {
+        //oc show error
+        console.error('_onSOAPResponse fail: ', SOAPResponse);
+      }
+    });
     
-  //oc: make the soap request.
-  $.soap({
-    url: this.url,
-    method: 'com:addLoyaltyInfo',
-    HTTPHeaders: { 
-      'Api-Key': this.apiKey,
-      'tlc': this.apiTlc
-    },
-    data: data,
-    appendMethodToURL: false, // method name will be appended to URL defaults to true
-    soap12: false,
-    envAttributes: this.envAttributes,
-    success: this._onAddLoyaltyInfo.bind(this),//make sure this is the right this 
-    error: function(SOAPResponse) {
-      //oc show error
-      console.error('_onSOAPResponse fail: ', SOAPResponse);
-    }
-  });
+  }
 
 }//end function addLoyaltyInfo
 
@@ -167,6 +176,7 @@ proto._onAddLoyaltyInfo = function(data){
 
   switch(addLoyaltyResult){
     case '0' : console.log('Loyalty Successfully attached!');
+      this.isCurrentRetailerAdded = true;
       //oc: immediately getActiveCoupons
       this.getActiveCoupons(this.currentRetailer);
       break; 
