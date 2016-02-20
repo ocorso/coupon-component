@@ -32,6 +32,7 @@ proto.createdCallback = function() {
   //oc: offer specific variables
   this.currentRetailer = null;
   this.isCurrentRetailerAdded = false;
+  this.currentLoyaltyData = null;
   this.currentOfferId = null;
   this.currentCouponId = null;
 
@@ -115,7 +116,7 @@ proto._onFetchData = function(soapResponse){
 proto.addLoyaltyInfo = function(loyaltyArr, merchantId){
   console.info('addLoyaltyInfo()');
   
-  if(merchantId == this.currentRetailer && this.isCurrentRetailerAdded){
+  if(this.isSameUser(loyaltyArr, merchantId)){
     //oc: skip directly to requesting current active coupons.
     console.debug('already added loyalty, skip to getActiveCoupons');
     this.getActiveCoupons(this.currentRetailer);
@@ -123,6 +124,10 @@ proto.addLoyaltyInfo = function(loyaltyArr, merchantId){
     //oc: store current merchant Id for later
     this.isCurrentRetailerAdded = false;
     this.currentRetailer = merchantId;
+    this.currentLoyaltyData = loyaltyArr;
+
+    //oc: regenerate reference ID in case this is a different card #
+    this.referenceId = Math.round(Math.random() * new Date().getTime());
 
     //oc: prepare data for SOAP request
     var data = {};
@@ -154,6 +159,37 @@ proto.addLoyaltyInfo = function(loyaltyArr, merchantId){
   }
 
 }//end function addLoyaltyInfo
+
+/*
+ * This function checks to see if the user submitting is the same 
+ * user that successfully submitted previously
+ * @param {array} loyaltyDataToCheck - this is the new loyalty info
+ * @param {string} merchantId - this is the current merchant
+ * @return {boolean} isSameUser - the result of same both loyalty AND merchant
+ */
+proto.isSameUser = function(loyaltyDataToCheck, merchantId){
+  console.log('isSameUser()');
+
+  var isSameLoyaltyAcc = false;
+  var isSameRetailer = false;
+  
+  //oc: is same retailer?
+  if(merchantId == this.currentRetailer && 
+      this.isCurrentRetailerAdded)
+    isSameRetailer = true;
+  else return false;
+  
+  //oc: we've successfully clipped something but 
+  //    is this data same loyalty data as before?
+  for(var i = 0; i< loyaltyDataToCheck.length; i++){
+    if( loyaltyDataToCheck[i]['mod:id'] == this.currentLoyaltyData[i]['mod:id'] &&
+        loyaltyDataToCheck[i]['mod:value'] == this.currentLoyaltyData[i]['mod:value'])
+      isSameLoyaltyAcc = true;
+    else return false;
+  }
+
+  return isSameRetailer && isSameLoyaltyAcc;
+}//end function
 
 /*
  * This function handles the response to addLoyaltyInfo
