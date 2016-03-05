@@ -7,7 +7,25 @@
 * 
 * Custom Events: 
 * https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events
+* 
+* Polyfill for IE found here:
+* http://stackoverflow.com/questions/26596123/internet-explorer-9-10-11-event-constructor-doesnt-work
 */
+
+(function () {
+  function CustomEvent ( event, params ) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent( 'CustomEvent' );
+    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+    return evt;
+   }
+
+  CustomEvent.prototype = window.Event.prototype;
+
+  window.CustomEvent = CustomEvent;
+})();
+
+
 var proto = Object.create(HTMLElement.prototype);
 
 proto.createdCallback = function() {
@@ -77,13 +95,14 @@ proto._onFetchData = function(soapResponse){
 
   //oc: drill down to find the response data
   response = soapResponse.toJSON();
-  console.log(response['#document']['soap:Envelope']['soap:Body']['ns1:getMerchantsAndOffersResponse']['ns1:out']);
-  var data = response['#document']['soap:Envelope']['soap:Body']['ns1:getMerchantsAndOffersResponse']['ns1:out'];
+  console.log(response['Body']['getMerchantsAndOffersResponse']['out']);
+  var data = response['Body']['getMerchantsAndOffersResponse']['out'];
 
   //oc: save data
-  this.imgPrefix = data['imageUrl']['_'].replace('http://','https://');//oc: switch to https
+  this.imgPrefix = data['imageUrl'].replace('http://','https://');//oc: switch to https
+  console.log(this.imgPrefix);
   this.offers = data['offers']['QOffer'];
-  this.version = data['version']['_'];
+  this.version = data['version']['text'];
 
   this.retailers = [];
 
@@ -95,8 +114,8 @@ proto._onFetchData = function(soapResponse){
   } //end for
 
   //oc: tell parent
-  var event = new Event('FETCH_DATA_COMPLETE');
-  this.dispatchEvent(event);
+  var myEvent = new CustomEvent('FETCH_DATA_COMPLETE');
+  this.dispatchEvent(myEvent);
 
 }//end function
 
@@ -206,7 +225,7 @@ proto.isSameUser = function(loyaltyDataToCheck, merchantId){
 proto._onAddLoyaltyInfo = function(data){
   console.info('_onAddLoyaltyInfo');
   var response = data.toJSON();
-  var addLoyaltyResult = response['#document']['soap:Envelope']['soap:Body']['ns1:addLoyaltyInfoResponse']['ns1:out'];
+  var addLoyaltyResult = response['Body']['addLoyaltyInfoResponse']['out'];
   console.log('addLoyaltyInfo result: '+ addLoyaltyResult);
 
 
@@ -324,9 +343,9 @@ proto._onGetActiveCoupons = function(soapResponse){
   
   //oc: drill down to get active coupon list.
   var response = soapResponse.toJSON();
-  var getActiveCouponsResult = response['#document']['soap:Envelope']['soap:Body']['ns1:getActiveCouponsByRetailerResponse']['ns1:out'];
+  var getActiveCouponsResult = response['Body']['getActiveCouponsByRetailerResponse']['out'];
   console.log(getActiveCouponsResult);
-  var activeCoupons = getActiveCouponsResult['ns2:QCouponLite'];
+  var activeCoupons = getActiveCouponsResult['QCouponLite'];
 
   //oc: search for currentOfferId in the coupon array
   var isFound = false;
@@ -346,12 +365,13 @@ proto._onGetActiveCoupons = function(soapResponse){
 
     if (activeCoupons[0]){
       //oc: multiple active coupons
-      for(var c of activeCoupons){
+      for(var i=0; i<activeCoupons.length; i++){
         console.debug('looping coupon array');
-        if (this.currentOfferId == c['offerId']['_']){
+        var c = activeCoupons[i];
+        if (this.currentOfferId == c['offerId']){
           isFound = true;
-          console.log('coupon Id to clip: '+c['couponId']['_']);
-          this.currentCouponId = c['couponId']['_'];
+          console.log('coupon Id to clip: '+c['couponId']);
+          this.currentCouponId = c['couponId'];
           break;
         }//end if
       }//end for
@@ -359,10 +379,10 @@ proto._onGetActiveCoupons = function(soapResponse){
     } else{
       //oc: only 1 active coupon, access directly
       console.log(activeCoupons);
-      if (this.currentOfferId == activeCoupons['offerId']['_']){
+      if (this.currentOfferId == activeCoupons['offerId']){
         isFound = true;
-        console.log('coupon Id to clip: '+activeCoupons['couponId']['_']);
-        this.currentCouponId = activeCoupons['couponId']['_'];
+        console.log('coupon Id to clip: '+activeCoupons['couponId']);
+        this.currentCouponId = activeCoupons['couponId'];
       }//end if
     }//end else
 
@@ -394,6 +414,8 @@ proto._onGetActiveCoupons = function(soapResponse){
   proto.clipCoupon = function(couponId, referenceId, partnerId, version) {
     console.info('clipCoupon: ' + couponId);
 
+    var couponObj = {'com:int': couponId.toString()};
+    var couponItem = [couponObj];
     $.soap({
       url: this.url,
       method: 'clipCoupon',
@@ -402,7 +424,7 @@ proto._onGetActiveCoupons = function(soapResponse){
         'tlc': this.apiTlc
       },
       data: {
-        'com:in0': [{'com:int':couponId}],//couponId from getActiveCouponsByRetailer
+        'com:in0': couponItem,//couponId from getActiveCouponsByRetailer
         'com:in1': referenceId, //referenceId
         'com:in2': partnerId, //PartnerId
         'com:in3': version
@@ -441,10 +463,10 @@ proto._onGetActiveCoupons = function(soapResponse){
   proto._onClipCoupon = function (soapResponse){
     console.log('clipCoupon complete');
     response = soapResponse.toJSON();
-    var data = response['#document']['soap:Envelope']['soap:Body']['ns1:clipCouponResponse']['ns1:out'];
+    var data = response['Body']['clipCouponResponse']['out'];
     console.log(data);
 
-    var statusCode = data['ns2:QClipResponse']['statusCode']['_'];
+    var statusCode = data['QClipResponse']['statusCode']['text'];
 
     switch (statusCode){
       case '0' : 

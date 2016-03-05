@@ -36,7 +36,7 @@ function updateRetailerSelectBox(event){
   myCoupon.currentOfferId = myCoupon.offers[offersSelectBoxElement.value]['offerId'];
   
   //oc: populate select box with current offer's retailers
-  var merchantIds = myCoupon.offers[offersSelectBoxElement.value]['merchantIds']['ns1:int'];
+  var merchantIds = myCoupon.offers[offersSelectBoxElement.value]['merchantIds']['int'];
   for (var i = 0; i < merchantIds.length; i++) {
     var name = myCoupon.retailers[merchantIds[i]]['name'];
     var value = merchantIds[i];
@@ -135,7 +135,7 @@ function createValidationField(field){
 /*
  * This function loops through the loyalty fields and prepares 
  * the value object that will be passed to the coupon API via the component.
- * @return array loyaltyData - an array of properly formatted objects  
+ * @return {array} loyaltyData - an array of properly formatted objects  
  */
 
 function prepareLoyaltyData(){
@@ -157,6 +157,10 @@ function prepareLoyaltyData(){
     
 }//end function
 
+/* 
+ * This fuction handles the FETCH_DATA_COMPLETE event
+ * dispatched by the coupon component.
+ */
 function onFetchData(){
   console.info('onFetchData');
 
