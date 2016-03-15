@@ -229,7 +229,7 @@ function onFetchData(){
 
 /* 
  * This fuction handles the click event
- * dispatched when a user clicks the submit button.
+ * dispatched when a user clicks the Add Loyalty Info button.
  */
 function onAddLoyaltyClick(event){
   console.info('onAddLoyaltyClick()');
