@@ -1,9 +1,17 @@
 /*
+* @author Owen Corso 
+*  q
 * Syntax taken from Ebidelman's article: 
 * http://www.html5rocks.com/en/tutorials/webcomponents/customelements/
 * and
 * @MattAntWest's article:
 * http://blog.teamtreehouse.com/create-custom-html-elements-2
+* 
+*/
+
+
+/*
+* oc: Need a polyfill for IE to accept custom events in IE.
 * 
 * Custom Events: 
 * https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events
@@ -11,7 +19,6 @@
 * Polyfill for IE found here:
 * http://stackoverflow.com/questions/26596123/internet-explorer-9-10-11-event-constructor-doesnt-work
 */
-
 (function () {
   function CustomEvent ( event, params ) {
     params = params || { bubbles: false, cancelable: false, detail: undefined };
@@ -28,6 +35,9 @@
 
 var proto = Object.create(HTMLElement.prototype);
 
+/* 
+ * Standard Web Component Callback fired when the element is instantiated.
+ */
 proto.createdCallback = function() {
   console.info('createdCallback');
   this.merchantsAndOffers = null;
@@ -55,13 +65,17 @@ proto.createdCallback = function() {
   this.currentCouponId = null;
 
 };
+
+/* 
+ * Standard Web Component Callback fired when the element is added to the DOM.
+ */
 proto.attachedCallback = function() {
   console.info('attachedCallback');
   if(this.autoLoad) this.fetchData();
 };
 
 /*
-* This function requests the offers and retailers from API
+* This function requests the offers and retailers from Cellfire API
 */
 proto.fetchData = function() {
   console.info('fetchData');

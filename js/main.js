@@ -4,6 +4,19 @@ var myCoupon;
 var offersSelectBoxElement;
 var retailerSelectBoxElement;
 var validationFieldsElement;
+var merchantNamesInDMA = {
+    'Kroger' : 1,
+    'Meijer': 1,
+    'Dollar General': 1,
+    'Giant Eagle': 1,
+    'Rite Aid': 1,
+    'SafeWay': 1,
+    'Save Mart': 1,
+    'Shop \'n Save': 1,
+    'Shoppers': 1,
+    'Star Market': 1,
+    'Valu Market':1
+};
 
 function onload(){ 
   console.log('onload');
@@ -38,13 +51,17 @@ function updateRetailerSelectBox(event){
   //oc: populate select box with current offer's retailers
   var merchantIds = myCoupon.offers[offersSelectBoxElement.value]['merchantIds']['int'];
   for (var i = 0; i < merchantIds.length; i++) {
-    var name = myCoupon.retailers[merchantIds[i]]['name'];
-    var value = merchantIds[i];
-    var opt = document.createElement('option'); // create new option element
-    // create text node to add to option element (opt)
-    opt.appendChild(document.createTextNode(name));
-    opt.value = value; // set value property of opt
-    retailerSelectBoxElement.appendChild(opt); // add opt to end of retailerSelectBoxElement
+
+    //oc: filter by retailers within specified DMA
+    if(true){//checkRetailer(merchantIds[i])){//oc: only show retailers in DMA
+      var name = myCoupon.retailers[merchantIds[i]]['name'];
+      var value = merchantIds[i];
+      var opt = document.createElement('option'); // create new option element
+      // create text node to add to option element (opt)
+      opt.appendChild(document.createTextNode(name));
+      opt.value = value; // set value property of opt
+      retailerSelectBoxElement.appendChild(opt); // add opt to end of retailerSelectBoxElement
+    }
   }//end for
 
  //oc: sort the merchants
@@ -54,6 +71,31 @@ function updateRetailerSelectBox(event){
     
   updateLoyaltyFields();
 };
+
+/*
+ * Write a function that determines if the merchant can appear.
+ * 
+ * Merchants in DMA:
+      Kroger
+      Meijer
+      Dollar General
+      Giant Eagle
+      Rite Aid
+      SafeWay
+      Save Mart
+      Shop N Save : Shop 'n Save
+      Shoppers
+      Star Market
+      Valu Market
+ */
+function checkRetailer(merchantId){
+  var nameToCheck = myCoupon.retailers[merchantId]['name'];
+  console.log('name to check: '+nameToCheck);
+  var isFound = merchantNamesInDMA[nameToCheck] == 1 ? 'True': 'False';
+  console.info('isFound? '+isFound);
+  return merchantNamesInDMA[nameToCheck] == 1;
+}
+
 
 /*
  * This function adjusts the UI appropriately for each merchant's preferred
@@ -185,6 +227,10 @@ function onFetchData(){
   updateRetailerSelectBox();
 }//end function
 
+/* 
+ * This fuction handles the click event
+ * dispatched when a user clicks the submit button.
+ */
 function onAddLoyaltyClick(event){
   console.info('onAddLoyaltyClick()');
 
