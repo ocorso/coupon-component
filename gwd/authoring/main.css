@@ -1,0 +1,785 @@
+/* Landscape phones and down */
+
+@media (min-width: 0px) and (max-width: 479px) {
+    #clipWindowView {
+        -ms-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+        height: 750px !important;
+        width: 400px !important;
+        -ms-transform: scale(0.7, 0.7) !important;
+        -webkit-transform: scale(0.7, 0.7)!important;
+        transform: scale(0.7, 0.7)!important;
+        margin-left: -30px;
+    }
+    #detailView {
+        top: 390px !important;
+        height: 330px;
+        width: 94% !important;
+    }
+    #cellfireLogo {
+        left: 86px !important;
+    }
+    #masterSubmit,
+    #browseBTN,
+    #sheetDismissBTN {
+        font-size: 16px !important;
+    }
+
+    .scissors
+    {
+        display:none;
+    }
+
+    .couponSavings p 
+    {
+        text-align:center;
+    }
+
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+    #clipWindowView {
+        -ms-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+        height: 750px !important;
+        width: 400px !important;
+        -ms-transform: scale(0.7, 0.7) !important;
+        -webkit-transform: scale(0.7, 0.7)!important;
+        transform: scale(0.7, 0.7)!important;
+        margin-left: -30px;
+    }
+    #detailView {
+        top: 390px !important;
+        height: 330px;
+        width: 94% !important;
+    }
+    #cellfireLogo {
+        left: 86px !important;
+    }
+}
+
+@media (min-width: 480px) and (max-width: 768px) {
+    #clipWindowView {
+        -ms-transform: scale(0.9, 0.9) !important;
+        -webkit-transform: scale(0.9, 0.9)!important;
+        transform: scale(0.9, 0.9)!important;
+        margin-left: -30px;
+    }
+    #detailView {
+        top: 390px !important;
+        height: 330px;
+        width: 94% !important;
+    }
+    .couponLeft {
+        width: 100% important;
+    }
+}
+
+@media (min-width: 0px) and (max-width: 980px) {
+    .couponView {
+        width: 100% !important;
+    }
+}
+
+@media (min-width: 981px) and (max-width:3000px) {
+    .couponView {
+        width: 50% !important;
+    }
+}
+
+
+/* close button for testing */
+
+.close-button {
+    position: absolute;
+    visibility: hidden;
+    width: 120px;
+    height: 48px;
+    left: 355px;
+    top: 3px;
+    background-image: none;
+    background-color: rgba(153, 153, 153, 0.2);
+}
+
+* {
+    box-sizing: border-box
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+}
+
+#headerImage {
+    position:relative;
+    width: 100%;
+    height: 150px;
+    background-image: url("headerImage.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    cursor: pointer;
+}
+
+#cellfireLogo {
+    position: absolute;
+    width: 212px;
+    height: 90px;
+    left: 425px;
+    top: 315px;
+    transform: scale(.6);
+}
+
+#backgroundImage {
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    position: absolute;
+}
+
+#couponContainer {
+    width: 100%;
+    height: 99%;
+    position: absolute;
+    overflow-y: auto;
+    font-family: 'Roboto', serif;
+    padding: 5px;
+    border-right: 10px solid rgba(255, 255, 255, 0);
+    border-bottom: 10px solid rgba(255, 255, 255, 0);
+    border-top: 10px solid rgba(255, 255, 255, 0);
+    border-radius: 8px;
+    opacity: 0;
+}
+
+#gradient {
+    position: absolute;
+    border-image-source: none;
+    border-color: transparent;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-image: -webkit-radial-gradient(50% 50%, circle cover, rgb(231, 231, 231) 0%, rgb(186, 203, 226) 100%);
+}
+
+#closeBTN {
+    right: 10px;
+    top: 10px;
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    z-index: 8000;
+}
+
+#closeBTN:hover {
+    -webkit-filter: invert();
+    cursor: pointer;
+}
+
+#loader {
+    position: absolute;
+    width: 106px;
+    height: 106px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+#logo {
+    position: absolute;
+    width: 226px;
+    height: 60.94px;
+    left: 387px;
+    top: 242px;
+    transform: scale(.8);
+}
+
+#logoTopLeft {
+    position: absolute;
+    width: 226px;
+    height: 60.94px;
+    left: 10px;
+    top: 10px;
+    opacity: 0;
+    transform: scale(.8);
+}
+
+#clipWindowView {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    /*  top: 180px;
+    left: 130px;*/
+    z-index: 100;
+    position: absolute;
+    height: 400px;
+    width: 750px;
+    border-radius: 12px;
+    border: dashed #3861AC;
+    background: rgba(255, 255, 255, 1);
+    overflow: hidden;
+    box-shadow: 0 0px 0px 8px #FFF, 0 0 12px 12px rgba(0, 0, 0, .4);
+    visibility: hidden;
+}
+
+#formContainer {
+    position: absolute;
+    width: 380px;
+    right: 30px;
+}
+
+#sheet {
+    position: absolute;
+    background: rgba(255, 255, 255, .9);
+    width: 380px;
+    height: 320px;
+    right: 10px;
+    display: none;
+}
+
+#detailView {
+    top: 10px;
+    left: 10px;
+    width: 330px;
+    height: 370px;
+    padding: 10px;
+    position: absolute;
+    overflow-y: auto;
+    font-family: 'Roboto', sans;
+}
+
+#detailName {
+    font-size: 17px;
+    font-family: 'Roboto Slab', serif;
+}
+
+#detailImage {
+    top: 0px;
+    margin-left: 40px;
+    width: 200px;
+    height: 200px;
+}
+
+#detailDesc {
+    font-size: 12px;
+}
+
+#detailLongDesc {
+    font-size: 9px;
+}
+
+#merchantPrompt {
+    top: 30px;
+    left: 30px;
+    position: absolute;
+    font-size: 17px;
+    font-family: 'Roboto Slab', serif;
+    color: #3961AC;
+}
+
+#merchantInfoPrompt {
+    top: 200px;
+    left: 30px;
+    position: absolute;
+    width: 340px;
+    font-size: 15px;
+    font-family: 'Roboto Slab', serif;
+    color: #3961AC;
+}
+
+#merchantCardIcon {
+    border-radius: 6px;
+    position: absolute;
+    width: 53px;
+    height: 32px;
+    top: 71px;
+    left: 35px;
+    pointer-events: none;
+}
+
+select, #merchantDropdown {
+    -moz-appearance:none;
+    top: 65px;
+    left: 30px;
+    position: absolute;
+    font-size: 16px;
+    border: 0;
+    border-radius: 8px;
+    height: 42px;
+    font-family: 'Roboto Slab', serif;
+    width: 340px;
+    color: #FFF;
+    text-indent: 65px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
+    background: #f9c667;
+    background: linear-gradient(to bottom, #f9c667 0%, #f79621 100%);
+}
+select option{
+  color: black;
+}
+
+#merchantDropdown:focus,
+#merchantCardField:focus,
+#browseBTN:focus,
+#masterSubmit:focus,
+#sheetDismissBTN:focus,
+#loyalty:focus,
+#phone:focus,
+#pin:focus,
+#shopper_id:focus,
+#email:focus,
+#username:focus,
+#couponContainer:focus,
+#password:focus {
+    outline: 0;
+}
+
+#merchantCardField {
+    top: 150px;
+    left: 30px;
+    position: absolute;
+    font-size: 16px;
+    border: 0;
+    border-radius: 8px;
+    height: 28px;
+    font-family: 'Roboto', serif;
+    width: 340px;
+    color: #3961AC;
+    text-indent: 10px;
+    border: 1px solid #aaaababab;
+    box-shadow: inset 2px 2px 2px 0px #dddddd;
+}
+
+#loyalty,
+#phone,
+#pin,
+#shopper_id,
+#email,
+#username,
+#password {
+    font-size: 16px;
+    height: 25px;
+    border: 0;
+    border-radius: 4px;
+    font-family: 'Roboto', serif;
+    color: #3961AC;
+    border: 1px solid #ababab;
+    box-shadow: inset 2px 2px 2px 0px #dddddd;
+    float: left;
+    display: inline-block;
+    margin-bottom: 4px;
+    text-indent: 5px;
+    width: 94%;
+}
+
+.orClass,
+.andClass {
+    font-size: 14px;
+    color: #3961AC;
+    display: inline-block;
+    font-family: 'Roboto', serif;
+    padding: 4px;
+    padding-bottom: 8px;
+    font-weight: bold;
+    width: 94%;
+    text-align: center;
+    clear: both;
+}
+
+::-webkit-input-placeholder {
+    position: relative;
+    font-size: 12px;
+    color: #3961AC;
+    text-align: center;
+    font-weight: bold;
+    padding-top: 4px;
+}
+
+#dynamicFormUI {
+    width: 100%;
+    overflow-y: auto;
+    max-height: 160px;
+    margin-bottom: 10px;
+}
+
+#fullFormUI {
+    top: 120px;
+    left: 30px;
+    width: 94%;
+    position: relative;
+}
+
+#validation_fields {}
+
+.onlyOneField {
+    width: 94% !important;
+}
+
+#merchantInfoHelp {
+    display: inline-block;
+    font-size: 12px;
+    clear: left;
+    font-family: 'Roboto', serif;
+    color: #3961AC;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 94%;
+}
+
+.noFlow {
+    overflow-y: hidden !important;
+}
+
+.couponView {
+    display: inline-block;
+    width: 230px;
+    height: 260px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.coupon {
+    position: relative;
+    overflow: hidden;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    background: rgba(255, 255, 255, 1);
+    margin: 5px;
+    box-shadow: 3px 3px 2px rgba(0, 0, 0, .1);
+    pointer-events: none;
+    border-radius: 8px;
+}
+
+
+
+.actionButton {
+    position: absolute;
+    bottom: 12px;
+    width: auto;
+    height: 50px;
+    left: 10px;
+    right: 10px;
+    border-radius: 4px;
+    color: #FFF;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    pointer-events: none;
+}
+
+.scissors {
+    width: 32px;
+    height: 32px;
+    right: 10px;
+    top: 10px;
+    position: absolute;
+    pointer-events: none;
+}
+
+.couponLeft {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    box-shadow: 6px 0px 32px -2px #D1D1D1, -6px 0px 32px -5px #D1D1D1;
+
+}
+
+.couponRight {
+    position: absolute;
+    right: 0px;
+    width: 50%;
+    height: 100%;
+    border-left: 2px dashed #FFF;
+
+    box-shadow: 6px 0px 32px -2px #ababab, -6px 0px 32px -5px #ababab;
+
+
+}
+
+
+.couponCategory {
+    position: relative;
+    width: 100%;
+    height: 32px;
+    background-color: #D02D2A;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.23);
+    font-size: 15px;
+    color: #FFF;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.couponDescription {
+    color: #333;
+    pointer-events: none;
+    text-align: center;
+    display:inline-block;
+    width:100%;
+    height:auto;
+    overflow:hidden;
+    position: relative !important;
+    top: 49% !important;
+    -ms-transform: translateY(-50%) !important;
+    -webkit-transform: translateY(-50%) !important;
+    transform: translateY(-50%) !important;
+    padding-left:10px;
+    padding-right:10px;
+
+}
+
+.couponDescription p {
+ 	width:100%;
+  	height:100px;
+}
+
+
+.couponCategory p {
+    font-family: 'Roboto Slab', serif;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+}
+
+.couponImage {
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    pointer-events: none;
+}
+
+.couponTitle {
+    top: 20px;
+    position: absolute;
+    padding: 5px;
+    width: 100%;
+    pointer-events: none;
+    display:block;
+}
+
+.couponTitle p {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    font-family: 'Roboto Slab', serif;
+    line-height: 20px;
+    margin: 0px;
+    padding: 0px;
+}
+
+
+.couponSavings {
+    color: #FFF;
+    pointer-events: none;
+    text-align: left;
+    display:inline-block;
+    width:100%;
+    height:auto;
+    overflow:hidden;
+    position: relative !important;
+    top: 49% !important;
+    -ms-transform: translateY(-50%) !important;
+    -webkit-transform: translateY(-50%) !important;
+    transform: translateY(-50%) !important;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.couponSavings p {
+    width:100%;
+    height:100px;
+}
+
+
+
+/**
+.couponSavings {
+    bottom: 15px;
+    left: 10px;
+    position: absolute;
+    pointer-events: none;
+}
+
+.couponSavings p {
+    padding: 0px;
+    margin: 0px;
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFF;
+    font-family: 'Roboto Slab', serif;
+}
+**/
+.superStroke {
+    text-shadow: 0 0 10px #FFF, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white, 0 0 4px white;
+}
+
+#detailView::-webkit-scrollbar,
+#dynamicFormUI::-webkit-scrollbar {
+    width: 6px !important;
+    padding: 6px !important;
+}
+
+#couponContainer::-webkit-scrollbar {
+    width: 10px !important;
+    padding: 10px !important;
+}
+
+#couponContainer::-webkit-scrollbar * {
+    background: transparent !important;
+}
+
+#detailView::-webkit-scrollbar *,
+#dynamicFormUI::-webkit-scrollbar * {
+    background: transparent !important;
+}
+
+#detailView::-webkit-scrollbar-track,
+#dynamicFormUI::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+#detailView::-webkit-scrollbar-thumb,
+#couponContainer::-webkit-scrollbar-thumb,
+#dynamicFormUI::-webkit-scrollbar-thumb {
+    background: #1C64AC !important;
+    border-radius: 8px !important;
+    opacity: .8 !important;
+}
+
+#detailView::-webkit-scrollbar-thumb:hover,
+#couponContainer::-webkit-scrollbar-thumb:hover,
+#dynamicFormUI::-webkit-scrollbar-thumb:hover {
+    background: #1C64AC !important;
+}
+
+#masterSubmit {
+    /*    top: 250px;
+    left: 210px;
+    position: absolute;*/
+    font-size: 20px;
+    border: 0;
+    border-radius: 8px;
+    height: 42px;
+    font-family: 'Roboto Slab', serif;
+    width: 170px;
+    color: #FFF;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
+    background: #f9c667;
+    background: linear-gradient(to bottom, #f9c667 0%, #f79621 100%);
+    cursor: pointer;
+}
+
+#masterSubmit:hover {
+    background: linear-gradient(to bottom, #f79621 0%, #f9c667 100%);
+}
+
+#browseBTN {
+    /*    top: 250px;
+    left: 30px;
+    position: absolute;*/
+    font-size: 20px;
+    border: 0;
+    border-radius: 8px;
+    height: 42px;
+    font-family: 'Roboto Slab', serif;
+    width: 170px;
+    color: #FFF;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
+    background: #b4df5b;
+    background: linear-gradient(to bottom, #A2C641 0%, #69AA30 100%);
+    cursor: pointer;
+}
+
+#sheetText {
+    margin: 0 auto;
+    padding: 30px;
+    font-size: 17px;
+    font-family: 'Roboto Slab', serif;
+}
+
+#sheetDismissBTN {
+    font-size: 20px;
+    border: 0;
+    border-radius: 8px;
+    height: 42px;
+    font-family: 'Roboto Slab', serif;
+    width: 170px;
+    color: #FFF;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
+    background: #b4df5b;
+    background: linear-gradient(to bottom, #27A5C6 0%, #083CAA 100%);
+    cursor: pointer;
+    bottom: 57px;
+    left: 100px;
+    position: absolute;
+}
+
+#sheetDismissBTN:hover {
+    background: linear-gradient(to bottom, #083CAA 0%, #27A5C6 100%);
+}
+
+#browseBTN:hover {
+    background: linear-gradient(to bottom, #69AA30 0%, #A2C641 100%);
+}
+
+.dimmed {
+    pointer-events: none;
+    opacity: .4;
+}
+
+.blurred {
+    -webkit-filter: blur(4px);
+    pointer-events: none;
+}
+
+.dead {
+    pointer-events: none;
+}
+
+#myConsole {
+    right: 43px;
+    position: absolute;
+    width: calc(60%);
+    z-index: 1000;
+    color: rgb(51, 204, 255);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    font-family: Courier, sans-serif;
+    font-size: 13px;
+    margin: 4px;
+    padding: 4px;
+    border: 7px solid rgba(29, 30, 25, .9);
+    border-radius: 5px;
+    background-color: rgba(29, 30, 25, .9);
+    background-clip: padding-box;
+}
+
+#myConsole::-webkit-scrollbar {
+    position: absolute;
+    width: 8px !important;
+}
+
+#myConsole::-webkit-scrollbar-thumb {
+    border-radius: 8px !important;
+    background: rgb(51, 204, 255) !important;
+}

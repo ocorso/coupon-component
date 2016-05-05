@@ -1,0 +1,39 @@
+{
+    "version": 4,
+
+    "authors": "tfarnon, ocorso",
+
+
+    "secondsToWaitForAPI": 15,
+
+
+    "ui": {
+        "showCategoryHeaders": false
+    },
+
+    "defaultCategoryName": "Coupon",
+    "defaultTextColor":"#096EBC",
+
+
+    "colorMap": {
+        "Coupon": "#FFF"
+    },
+
+    "formStrings": {
+        "merchantPrompt": "Please Select Your Retailer of Choice...",
+        "clipButtonText": "Clip Coupon",
+        "isClippingText": "Clipping...",
+        "clipButtonSuccessText":"Great!",
+        "cancelButtonText": "Keep Browsing",
+        "errorDismissButtonText": "Try Again"
+    },
+
+    "errors": {
+        "emptyFormError": {
+            "headline": "Whoops!",
+            "description": "It looks like you didn't enter any information!<br><br>Please check your input."
+        },
+
+        "feedIncomplete": "Incoming data is incomplete."
+    }
+}
